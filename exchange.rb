@@ -1,4 +1,5 @@
 require 'time'
+
 module User
 	def user_details
 		user = [
@@ -9,81 +10,6 @@ module User
 		 {:first_name => 'Sundar', :last_name => 'Pichai', :date_of_birth => '1983-05-11', :address => 'vijay nagar', :role => 'buyer'}
 		]
 	end	
-end
-
-class Seller 
-	include User
-	def seller_details  # method to get details of sellers only
-	  values = user_details
-	  puts "Seller details are -"
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "seller" 
-		  		puts i  
-		  	end 
-			end
-		end
-	end
-	def get_fullname  # method to get fullname of sellers only
-	  values = user_details
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "seller" 	
-		  		puts "Full name of seller is #{i[:first_name]} #{i[:last_name]}"  
-		  	end 
-			end
-		end
-	end
-	def age_of_seller  # method to get age of sellers only
-    values = user_details
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "seller" 	
-          now = Time.now
-          dob = Time.parse i[:date_of_birth]
-          puts "Age of seller #{i[:first_name]} #{i[:last_name]} is #{now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)}"
-		  	end 
-			end
-		end
-	end
-end
-
-class Buyer 
-	include User
-	def buyer_details # method to get details of buyers only
-		puts "Buyer details are -"
-	  values = user_details
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "buyer" 
-		  		puts i 
-		  	end 
-		  end
-		end
-	end
-  def get_fullname   # method to get fullname of buyers only
-	  values = user_details
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "buyer" 	
-		  		puts "Full name of buyer is #{i[:first_name]} #{i[:last_name]}"  
-		  	end 
-			end
-		end
-	end
-def age_of_buyer  # method to get age of buyers only
-    values = user_details
-	  values.each do |i| 
-	    i.each do |key, value|
-		  	if value == "buyer" 	
-          now = Time.now
-          dob = i[:date_of_birth]
-          dob = Time.parse dob
-					puts "Age of buyer #{i[:first_name]} #{i[:last_name]} is #{now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)}"
-		  	end 
-			end
-		end
-	end
 end
 
 def product_details
@@ -111,23 +37,82 @@ def product_details
 	]
 end
 
-def get_items # method to get details of products
-	items = product_details
-	puts "Here is the product details -\n\n"
-	items.each do |i|
+def find_details(values, string)  # method to get details of sellers and buyers 
+	values.each do |i| 
 		i.each do |key, value|
-	    puts "#{key}:#{value}"
+			if value == string 
+			  details = i.to_s.gsub(/[,:""\{|\}]/ ,"") 
+			  puts details.to_s.gsub(/[\s]/ ,"\n") 
+			end 
+		end
+	end
+end
+
+def print_first_and_last_name(values, string)  # method to get fullname of sellers and buyers
+ values.each do |i| 
+	  i.each do |key, value|
+		  if value == string 	
+		  	puts "Full name of seller is #{i[:first_name]} #{i[:last_name]}"  
+		  end 
+		end
+	end
+end
+
+def get_age(values, string)  # method to get age of sellers and buyers
+  values.each do |i| 
+	  i.each do |key, value|
+		  if value == string 	
+        now = Time.now
+        dob = Time.parse i[:date_of_birth]
+        puts "Age of #{i[:first_name]} #{i[:last_name]} is #{now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)}"
+		  end 
+		end
+	end
+end
+
+class Seller 
+	include User
+	def seller_details  
+	  puts "Seller details are -"
+	  find_details(user_details, role = "seller")
+	end
+	def get_fullname 
+		print_first_and_last_name(user_details, role = "seller")
+	end
+	def age_of_seller  
+		get_age(user_details, role = "seller")
+	end
+end
+
+class Buyer 
+	include User
+	def buyer_details
+		puts "Buyer details are -"
+	  find_details(user_details, role = "buyer")
+	end
+  def get_fullname
+		print_first_and_last_name(user_details, role = "buyer")
+	end
+  def age_of_buyer
+		get_age(user_details, role = "buyer")
+	end
+end
+
+def get_items  # method to get details of products
+	puts "Here is the product details -\n\n"
+	product_details.each do |i|
+		i.each do |key, value|
+	    puts "#{key} : #{value}"
 	  end
 	  puts
 	end
 end
 
-details_of_user = Class.new.send(:include, User).new # get details of user
+details_of_user = Class.new.send(:include, User).new  # get details of user
 puts "Users are -\n\n"
-candidates = details_of_user.user_details
-candidates.each do |i|
+details_of_user.user_details.each do |i|
 	i.each do |key, value|
-	  puts "#{key}:#{value}"
+	  puts "#{key} : #{value}"
 	end
 end
 
@@ -138,22 +123,13 @@ seller.get_fullname
 
 buyer = Buyer.new
 buyer.get_fullname
-
 buyer.buyer_details
 
 seller.seller_details
-
 seller.age_of_seller
 
 buyer.age_of_buyer
 puts 
 person = Class.new.send(:include, User).new
 puts "users having name alex are -\n\n"
-candidates = person.user_details
-candidates.each do |i|
-	i.each do |key, value|
-		if value == "alex"
-	    puts i
-	  end
-	end
-end
+find_details(person.user_details, first_name = "alex")
