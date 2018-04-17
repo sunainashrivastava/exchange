@@ -2,16 +2,15 @@
 
 require 'time' # including time module to use time functions.
 
-load 'data.rb'
+load 'trade_data.rb'
 
-load 'methods.rb'
+load 'trade_methods.rb'
 
-load 'classes.rb'
+load 'trade_classes.rb'
 
 def items_list
   puts "Here is the product details -\n\n" # method to get details of products
-  product_details = product_details1 + product_details2 + product_details3
-  product_details.flatten.each do |data|
+  product_details.each do |data|
     data.each do |key, value|
       puts "#{key} : #{value}"
     end
@@ -21,8 +20,8 @@ end
 
 details_of_user = Class.new.send(:include, User).new # get details of user
 puts "Users are -\n\n"
-details = details_of_user.user_details1 + details_of_user.user_details2
-details.flatten.each do |data|
+details = details_of_user.user_details
+details.each do |data|
   data.each do |key, value|
     puts "#{key} : #{value}"
   end
@@ -46,5 +45,5 @@ buyer.age_of_buyer
 puts
 person = Class.new.send(:include, User).new
 puts "users having name alex are -\n\n"
-candidates = (person.user_details1 + person.user_details2).flatten
+candidates = person.user_details
 find_details(candidates, 'alex')
