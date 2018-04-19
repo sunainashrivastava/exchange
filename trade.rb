@@ -2,48 +2,63 @@
 
 require 'time' # including time module to use time functions.
 
-load 'trade_data.rb'
+load 'userdatasource.rb'
 
-load 'trade_methods.rb'
+load 'buyers.rb'
 
-load 'trade_classes.rb'
+load 'sellers.rb'
 
-def items_list
-  puts "Here is the product details -\n\n" # method to get details of products
-  product_details.each do |data|
-    data.each do |key, value|
-      puts "#{key} : #{value}"
-    end
-  end
-  puts
+load 'productdatasource.rb'
+
+puts 'User details are -'
+UserDataSource.import_user_data
+Buyers.all.each { |buyer| puts buyer.details }
+Sellers.all.each { |seller| puts seller.details }
+puts
+
+puts 'Product details are -'
+Alex.import_product_data
+Alex.all.each { |seller| puts seller.details + "\n\n" }
+
+Meena.import_product_data
+Meena.all.each { |seller| puts seller.details + "\n\n" }
+
+Prabhu.import_product_data
+Prabhu.all.each { |seller| puts seller.details + "\n\n" }
+
+puts 'Buyers age are -'
+p Buyers.all
+Buyers.all.each { |buyer| puts buyer.age }
+puts
+
+puts 'Buyers full_name are -'
+Buyers.all.each { |buyer| puts buyer.full_name }
+puts
+
+puts 'Buyers details are -'
+Buyers.all.each { |buyer| puts buyer.details }
+puts
+
+puts 'Sellers age are -'
+Sellers.all.each { |seller| puts seller.age }
+puts
+
+puts 'Sellers full_name are -'
+Sellers.all.each { |seller| puts seller.full_name }
+puts
+
+puts 'Sellers details are -'
+Sellers.all.each { |seller| puts seller.details }
+puts
+
+puts 'Users having name "alex" are -'
+
+Buyers.all.each do |buyer|
+  @buyers = buyer.details if buyer.first_name == 'alex'
 end
+puts @buyers
 
-details_of_user = Class.new.send(:include, User).new # get details of user
-puts "Users are -\n\n"
-details = details_of_user.user_details
-details.each do |data|
-  data.each do |key, value|
-    puts "#{key} : #{value}"
-  end
+Sellers.all.each do |seller|
+  @sellers = seller.details if seller.first_name == 'alex'
 end
-puts
-
-items_list
-
-seller = Sellers.new
-seller.fullname
-
-buyer = Buyers.new
-buyer.fullname
-puts
-buyer.buyer_details
-
-seller.seller_details
-seller.age_of_seller
-
-buyer.age_of_buyer
-puts
-person = Class.new.send(:include, User).new
-puts "users having name alex are -\n\n"
-candidates = person.user_details
-find_details(candidates, 'alex')
+puts @sellers
